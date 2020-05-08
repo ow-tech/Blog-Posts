@@ -14,8 +14,26 @@
     {% endif %}
 </head>
 <body>
+    {% block navbar %}
+        {% include 'navbar.html' %}
+    {% endblock %}
     <div class ="container">
-        {% block content %}{% endblock %}
+        <div class ='row'>
+            <div class ='col-md-8'>
+                {% block content %}{% endblock %}
+            </div>
+            <div class='col-md-4'>
+                <div>
+                    <h3>From Blogs to You</h3>
+                    <h6>Stay Motivated and Quoted</h6>
+                    <ul>
+                        <li>QUotes appear here</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        
 
     </div>
     
