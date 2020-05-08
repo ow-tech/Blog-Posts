@@ -16,6 +16,7 @@
 </head>
 <body>
 
+
     <div class ="container">
         <div class ='row'>
             <div class ='col-md-8'>
@@ -35,6 +36,9 @@
                     <h3>From Blogs to You</h3>
                     <h6>Stay Motivated and Quoted</h6>
                     <ul>
+                        {% for quote in quotes %}
+                        <li>{{quote.author}}</li>
+                        {% endfor %}
                         <li>QUotes appear here</li>
                     </ul>
                 </div>

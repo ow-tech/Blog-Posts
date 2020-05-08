@@ -1,6 +1,8 @@
 from flask import render_template, url_for, flash, redirect
-from app import app
-from forms import RegistrationForms, LoginForms
+from . import main
+from .forms import RegistrationForms, LoginForms
+#from ..models import
+# from ..request import get_quote
 
 
 #dammy post
@@ -20,29 +22,30 @@ blogs =[
 ]
 
 # Views
-@app.route('/')
+@main.route('/')
 def home():
 
     '''
     View root page function that returns the index page and its data
     '''
-    return render_template('home.html', blogs = blogs)
+    # quote = get_quote()
+    return render_template('home.html', blogs = blogs, )
 
-@app.route('/register', methods = ['GET', 'POST'])
+@main.route('/register', methods = ['GET', 'POST'])
 def register():
     form = RegistrationForms()
     if form.validate_on_submit():
         flash(f'Account created for {form.username.data}!', 'success')
-        return redirect(url_for('home'))
+        return redirect(url_for('main.home'))
     return render_template('register.html', title= 'Register', form=form)
 
-@app.route('/login',methods = ['GET', 'POST'])
+@main.route('/login',methods = ['GET', 'POST'])
 def login():
     form = LoginForms()
     if form.validate_on_submit():
         if form.username.data =='admin' and form.password.data=='password':
             flash(f'You have been logged in {form.username.data}!', 'success')
-            return redirect(url_for('home'))
+            return redirect(url_for('main.home'))
         else:
             flash('Login Unsuccessful. Please check username and password','danger')
     return render_template('login.html', title= 'login', form=form)
