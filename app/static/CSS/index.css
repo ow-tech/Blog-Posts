@@ -8,7 +8,7 @@ body {
     color: #444444;
   }
   
-  #pitch-area {
+  .pitch-area {
     background: #ffffff;
     padding: 10px 20px;
     border: 3px solid #dddddd;
@@ -25,4 +25,23 @@ body {
   
   .site-header .navbar-nav .nav-link.active {
     font-weight: 500;
+  }
+  .section-title {
+    color: #444444;
+}
+a.section-title:hover {
+  color: #428bca;
+  text-decoration: none;
+  }
+  .section-content {
+    white-space: pre-line;
+    }
+.section {
+  padding-bottom: 1px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #e3e3e3
+  }
+.section a:hover {
+  color: #333;
+  text-decoration: none;
   }

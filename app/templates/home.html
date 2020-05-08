@@ -1,9 +1,16 @@
 {% extends 'layout.html' %}
 {% block content %}
     {% for blog in blogs %}
-        <h1>{{blog.title}}</h1>
-        <p>{{blog.author}}</p>
-        <p>{{blog.content}}</p>
+    <section class="media pitch-area">
+        <div class="media-body">
+            <div class = 'section'>
+                <a class="mr-2" href='#'>{{blog.author}}</a>
+                <small class="text-muted">{{blog.date_posted}}</small>
+            </div>
+            <h2><a class ='section-title' href="#">{{blog.title}}</a></h2>
+            <p class='section-content'>{{blog.content}}</p>
+        </div>
+    </section>
     {% endfor %}
 {% endblock %}
 
