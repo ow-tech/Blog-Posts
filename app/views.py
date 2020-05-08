@@ -1,6 +1,6 @@
-from flask import render_template, flash, redirect
+from flask import render_template, url_for, flash, redirect
 from app import app
-from forms import RegistrationForms, LoginForm
+from forms import RegistrationForms, LoginForms
 
 
 #dammy post
@@ -34,9 +34,15 @@ def register():
     if form.validate_on_submit():
         flash(f'Account created for {form.username.data}!', 'success')
         return redirect(url_for('home'))
-    return render_template('register.html', title= 'Register' form=form)
+    return render_template('register.html', title= 'Register', form=form)
 
 @app.route('/login',methods = ['GET', 'POST'])
 def login():
     form = LoginForms()
-    return render_template('login.html', title= 'login' form=form)
+    if form.validate_on_submit():
+        if form.username.data =='admin' and form.password.data=='password':
+            flash(f'You have been logged in {form.username.data}!', 'success')
+            return redirect(url_for('home'))
+        else:
+            flash('Login Unsuccessful. Please check username and password','danger')
+    return render_template('login.html', title= 'login', form=form)
