@@ -3,6 +3,7 @@ from . import main
 from ..import db, bcrypt
 from .forms import RegistrationForms, LoginForms
 from ..models import User, Post
+from flask_login import login_user
 # from ..request import get_quote
 
 
@@ -48,8 +49,9 @@ def register():
 def login():
     form = LoginForms()
     if form.validate_on_submit():
-        if form.username.data =='admin' and form.password.data=='password':
-            flash(f'You have been logged in {form.username.data}!', 'success')
+        user = User.query.filter_by(username=form.data).First()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user, remember=form.remember.data)
             return redirect(url_for('main.home'))
         else:
             flash('Login Unsuccessful. Please check username and password','danger')
