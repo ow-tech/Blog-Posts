@@ -1,9 +1,9 @@
 from flask import render_template, url_for, flash, redirect
 from . import main
 from ..import db, bcrypt
-from .forms import RegistrationForms, LoginForms
+from .forms import RegistrationForms, LoginForms, PostForm
 from ..models import User, Post
-from flask_login import login_user
+from flask_login import login_user, current_user, logout_user, login_required
 # from ..request import get_quote
 
 
@@ -35,6 +35,8 @@ def home():
 
 @main.route('/register', methods = ['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.home'))
     form = RegistrationForms()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
@@ -47,12 +49,28 @@ def register():
 
 @main.route('/login',methods = ['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.home'))
     form = LoginForms()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.data).First()
+        user = User.query.filter_by(username=form.username.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             return redirect(url_for('main.home'))
         else:
             flash('Login Unsuccessful. Please check username and password','danger')
     return render_template('login.html', title= 'login', form=form)
+
+@main.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('main.home'))
+
+@main.route('/post/new',methods=['GET','POST'])
+@login_required
+def new_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        flash('Your post has been created','success')
+        return redirect(url_for('main.home'))
+    return render_template('new_post.html', title='New Post',form=form)
