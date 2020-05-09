@@ -7,31 +7,16 @@ from flask_login import login_user, current_user, logout_user, login_required
 # from ..request import get_quote
 
 
-#dammy post
-blogs =[
-    {
-        'author': "alex Barasa",
-        'title': "Blog Post Alex",
-        'content':"First post content",
-        'date_password': "April 20, 2020"
-    },
-    {
-    'author': "Loda Kim",
-    'title': "Blog Post Kim",
-    'content':"Second post content",
-    'date_password': "April 20, 2020"
-    }
-]
-
 # Views
 @main.route('/')
 def home():
+    blogs = Post.query.all()
 
     '''
     View root page function that returns the index page and its data
     '''
     # quote = get_quote()
-    return render_template('home.html', blogs = blogs, )
+    return render_template('home.html', blogs=blogs )
 
 @main.route('/register', methods = ['GET', 'POST'])
 def register():
@@ -64,13 +49,22 @@ def login():
 @main.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('main.home'))
+    return redirect(url_for('main.login'))
 
 @main.route('/post/new',methods=['GET','POST'])
 @login_required
 def new_post():
     form = PostForm()
     if form.validate_on_submit():
+        post = Post(title=form.title.data, content=form.content.data,author=current_user)
+        db.session.add(post)
+        db.session.commit()
         flash('Your post has been created','success')
         return redirect(url_for('main.home'))
     return render_template('new_post.html', title='New Post',form=form)
+
+@main.route('/post/<int:post_id>',methods=['GET','POST'])
+@login_required
+def blog(post_id):
+    blog = Post.query.get_or_404(post_id)
+    return render_template('blog.html', title=blog.title, blog=blog)

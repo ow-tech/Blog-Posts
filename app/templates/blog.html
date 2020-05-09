@@ -1,17 +1,14 @@
 {% extends 'layout.html' %}
 {% block content %}
-    {% for blog in blogs %}
     <section class="media pitch-area">
         <div class="media-body">
             <div class = 'section'>
                 <a class="mr-2" href='#'>{{blog.author.username}}</a>
                 <small class="text-muted">{{blog.date_posted.strftime('%Y-%m-%d')}}</small>
             </div>
-            <h2  class ='section-title'>{{blog.title}}</h2>
-            <p class='pitch-area'>{{blog.content}}</p>
-            <a href="{{url_for('main.blog',post_id=blog.id)}}"><button class="btn btn-outline-info">Comments</button></a>
+            <h2 class ='section-title'>{{blog.title}}</h2>
+            <p class='section-content'>{{blog.content}}</p>
         </div>
     </section>
-    {% endfor %}
 {% endblock %}
 
