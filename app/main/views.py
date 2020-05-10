@@ -1,4 +1,4 @@
-from flask import render_template, url_for, flash, redirect
+from flask import render_template, url_for, flash, redirect, abort, request
 from . import main
 from ..import db, bcrypt
 from .forms import RegistrationForms, LoginForms, PostForm, CommentForm
@@ -61,7 +61,7 @@ def new_post():
         db.session.commit()
         flash('Your post has been created','success')
         return redirect(url_for('main.home'))
-    return render_template('new_post.html', title='New Post',form=form)
+    return render_template('new_post.html', title='New Post',form=form, legend = 'New Blog')
 
 @main.route('/post/<int:post_id>',methods=['GET','POST'])
 @login_required
@@ -75,8 +75,40 @@ def blog(post_id):
         db.session.add(comments)
         db.session.commit()
         flash('Your comment has been posted')
-        return redirect(url_for('main.home'))
+        return redirect(url_for('main.blog', post_id=blog.id))
     return render_template('blog.html', title=blog.title, blog=blog, comments=comments,form=form)
+
+
+
+@main.route('/post/<int:post_id>/update', methods=['GET','POST'])
+@login_required
+def update_post(post_id):
+    blog = Post.query.get_or_404(post_id)
+    if blog.author !=current_user:
+        abort(403)
+    form = PostForm()
+    if form.validate_on_submit():
+        blog.title =form.title.data
+        blog.content =form.content.data
+        db.session.commit()
+        flash('Your blog has been updated!','success')
+        return redirect(url_for('main.blog',post_id=blog.id))
+    elif request.method =='GET':
+        form.title.data = blog.title
+        form.content.data = blog.content
+
+    return render_template('new_post.html', title='update post',form=form, legend = 'Update Blog')
+
+@main.route('/post/<int:post_id>/delete', methods=['POST'])
+@login_required
+def delete_post(post_id):
+    blog = Post.query.get_or_404(post_id)
+    if blog.author !=current_user:
+        abort(403)
+    db.session.delete(blog)
+    db.session.commit()
+    flash('Your blog has been Deleted!','success')
+    return redirect(url_for('main.home'))
 
 # @main.route('/comment/<int:comment_id>',methods=['GET','POST'])
 # @login_required

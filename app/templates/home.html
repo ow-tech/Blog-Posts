@@ -7,7 +7,7 @@
                 <a class="mr-2" href='#'>{{blog.author.username}}</a>
                 <small class="text-muted">{{blog.date_posted.strftime('%Y-%m-%d')}}</small>
             </div>
-            <h2  class ='section-title'>{{blog.title}}</h2>
+            <h2><a class="section-title" href="{{url_for('main.blog',post_id=blog.id)}}">{{blog.title}}</a></h2>
             <p class='pitch-area'>{{blog.content}}</p>
             <a href="{{url_for('main.blog',post_id=blog.id)}}"><button class="btn btn-outline-info">Comments</button></a>
         </div>

@@ -5,6 +5,12 @@
             <div class = 'section'>
                 <a class="mr-2" href='#'>{{blog.author.username}}</a>
                 <small class="text-muted">{{blog.date_posted.strftime('%Y-%m-%d')}}</small>
+                {% if blog.author == current_user %}
+                <div>
+                    <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('main.update_post', post_id=blog.id)}}">Update</a>
+                    <button type="button" class="btn btn-danger btn-sm m-1"data-toggle="modal" data-target="#deleteModal">Delete</button>
+                </div>
+                {% endif %}
             </div>
             <h2 class ='section-title'>{{blog.title}}</h2>
             <p class='section-content'>{{blog.content}}</p>            
@@ -59,5 +65,25 @@
 
 
     </div>
+        <!-- Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Sure You Want to DELETE this Blog?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <form action ="{{ url_for('main.delete_post',post_id=blog.id)}}" method="POST">
+                        <input class="btn btn-danger" type='submit' value="Delete">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
