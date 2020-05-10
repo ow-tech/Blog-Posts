@@ -3,20 +3,23 @@ from . import main
 from ..import db, bcrypt
 from .forms import RegistrationForms, LoginForms, PostForm, CommentForm
 from ..models import User, Post, Comment
+from ..request import random_quote
 from flask_login import login_user, current_user, logout_user, login_required
-# from ..request import get_quote
+from ..request import random_quote
 
 
 # Views
-@main.route('/')  
+@main.route('/',methods = ['GET'])  
 def home():
     blogs = Post.query.all()
 
     '''
     View root page function that returns the index page and its data
     '''
-    # quote = get_quote()
-    return render_template('home.html', blogs=blogs )
+    random = random_quote()
+    quote = random['quote']
+    author = random['author']
+    return render_template('home.html', blogs=blogs, quote=quote, author=author)
 
 @main.route('/register', methods = ['GET', 'POST'])
 def register():
@@ -122,15 +125,3 @@ def delete_comment(comment_id):
     else:
         abort(403)
     return redirect(url_for('main.blog'))
-
-# @main.route('/comment/<int:comment_id>',methods=['GET','POST'])
-# @login_required
-# def comment(comment_id):
-#     form = CommentForm()
-#     if form.validate_on_submit():
-#         comment = Comment(content = form.content.data, author=current_user)
-#         db.session.add(comment)
-#         db.session.commit()
-#         flash('Your comment has been posted')
-#         return redirect(url_for('main.home'))
-#     return render_template('new_comment.html', title='Commenting', form=form)
