@@ -7,8 +7,57 @@
                 <small class="text-muted">{{blog.date_posted.strftime('%Y-%m-%d')}}</small>
             </div>
             <h2 class ='section-title'>{{blog.title}}</h2>
-            <p class='section-content'>{{blog.content}}</p>
-        </div>
+            <p class='section-content'>{{blog.content}}</p>            
+
+        </div>     
     </section>
+    <div class='pitch-area'>
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class ="border-bottom mb-4">New Comment</legend>
+                <div class ="form-group">
+                    {{ form.content.label(class="from-control-label") }}
+                    {% if form.content.errors %}
+                    
+                        <div class="invalid-feedback">
+                            {% for error in form.content.errors %}
+                                <span>{{error}}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.content(class="from-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class ="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+
+    </div>
+    <div class='comments'>
+        {% for comment in comments%}
+        <div>
+            <ul>
+                <li>
+                   <div>
+                       <div class = 'section'>
+                            <a class="mr-2" href='#'>{{comment.author.username}}</a>
+                            <small class="text-muted">{{comment.date_posted.strftime('%Y-%m-%d')}}</small>
+                        </div>
+                        <div>
+                            <p>{{comment.content}}</p>
+                        </div>
+                   </div>
+                </li>
+            </ul>
+        </div>
+        {% endfor %}
+        
+
+
+
+    </div>
 {% endblock %}
 

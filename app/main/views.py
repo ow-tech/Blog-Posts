@@ -1,14 +1,14 @@
 from flask import render_template, url_for, flash, redirect
 from . import main
 from ..import db, bcrypt
-from .forms import RegistrationForms, LoginForms, PostForm
-from ..models import User, Post
+from .forms import RegistrationForms, LoginForms, PostForm, CommentForm
+from ..models import User, Post, Comment
 from flask_login import login_user, current_user, logout_user, login_required
 # from ..request import get_quote
 
 
 # Views
-@main.route('/')
+@main.route('/')  
 def home():
     blogs = Post.query.all()
 
@@ -67,4 +67,25 @@ def new_post():
 @login_required
 def blog(post_id):
     blog = Post.query.get_or_404(post_id)
-    return render_template('blog.html', title=blog.title, blog=blog)
+    # comments = Comment.query.filter_by(id=blog.id)
+    comments = Comment.query.all()
+    form = CommentForm()
+    if form.validate_on_submit():
+        comments = Comment(content = form.content.data, author=current_user)
+        db.session.add(comments)
+        db.session.commit()
+        flash('Your comment has been posted')
+        return redirect(url_for('main.home'))
+    return render_template('blog.html', title=blog.title, blog=blog, comments=comments,form=form)
+
+# @main.route('/comment/<int:comment_id>',methods=['GET','POST'])
+# @login_required
+# def comment(comment_id):
+#     form = CommentForm()
+#     if form.validate_on_submit():
+#         comment = Comment(content = form.content.data, author=current_user)
+#         db.session.add(comment)
+#         db.session.commit()
+#         flash('Your comment has been posted')
+#         return redirect(url_for('main.home'))
+#     return render_template('new_comment.html', title='Commenting', form=form)
