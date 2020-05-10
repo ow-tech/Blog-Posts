@@ -6,12 +6,13 @@ from ..models import User, Post, Comment
 from ..request import random_quote
 from flask_login import login_user, current_user, logout_user, login_required
 from ..request import random_quote
+from sqlalchemy import desc
 
 
 # Views
 @main.route('/',methods = ['GET'])  
 def home():
-    blogs = Post.query.all()
+    blogs = Post.query.order_by(desc(Post.date_posted)).all()
 
     '''
     View root page function that returns the index page and its data
